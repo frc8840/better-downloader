@@ -32,6 +32,6 @@ If you don't want to use the menu via the command line and rather start it insta
 `node app.js --c:3333 ~/path/to/recieving/dir --ip 123.456.78.9` (Recieving using port 3333 from ip 123.456.78.9.)  
   
   
-If there is a directory with files already in them that you want to use for recieving, set it up with:
+If there is a directory with files already in them that you want to use for recieving, set it up with:   
 `node app.js --setup ~/path/to/directory`  
 or select the "Setup pre-existing directory for recieving" option in the menu.
