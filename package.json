@@ -5,13 +5,15 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node app.js"
+    "start": "echo \"Run the program using node app.js - will be fixed in the future, but you can't specify arguments with npm start.\" && exit 1"
   },
   "author": "jaiden grimminck",
   "license": "MIT",
   "dependencies": {
+    "archiver": "^5.3.1",
     "colors": "^1.4.0",
     "express": "^4.18.1",
+    "extract-zip": "^2.0.1",
     "keypress": "^0.2.1"
   }
 }

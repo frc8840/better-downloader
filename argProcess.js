@@ -13,14 +13,20 @@ function findArgs() {
     printMenu();
 
     return new Promise((res, rej) => {
+
         // listen for the "keypress" event
         process.stdin.on('keypress', function (ch, key) {
+            let addThisToNextKey = true;
+
             if (key && key.ctrl && key.name == 'c') {
                 process.stdin.pause();
                 c.lear();
+                if (!!global["menuFinished"]) process.exit();
                 res("exit")
                 return;
             }
+
+            if (!!global["menuFinished"]) return;
             
             if (key) {
                 if (isArrow(key) && !operator.typing.is) {
@@ -40,10 +46,12 @@ function findArgs() {
                     } else {
                         menus[operator.onMenu][operator.menuItem].on();
                     }
+
+                    addThisToNextKey = false;
                 }
             }
 
-            if (operator.typing.is) {
+            if (operator.typing.is && addThisToNextKey) {
                 if (key) {
                     if (key.name == "backspace") {
                         let str = operator.typing.contents.split('');
@@ -58,6 +66,14 @@ function findArgs() {
             }
 
             printMenu();
+
+            if (!!global["menuFinished"]) {
+                let finalArgs = ["",""];
+                finalArgs = finalArgs.concat(global.margs)
+                c.lear();
+                intro();
+                res(finalArgs)
+            }
         });
 
         process.stdin.setRawMode(true);
@@ -104,18 +120,66 @@ const menus = {
     "home": [
         {
             txt: "Host server",
-            on() {}
+            on() {
+                const promptForAction = (extraMsg="") => {
+                    prompt(extraMsg + "Enter port number to host on (enter 'default' if hosting on default port)", (response) => {
+                        let port = parseInt(response);
+
+                        if (response == "default") port = 12652;
+
+                        if (isNaN(port) || port == null) promptForAction("Must enter a number or 'default'.\n");
+
+                        global.margs = [
+                            String(port),
+                        ]
+
+                        prompt("Enter directory location for host: ", (response) => {
+                            global.margs.push(response),
+
+                            global.menuFinished = true;
+                        })
+                    })
+                }
+
+                promptForAction();
+            }
         },
         {
-            txt: "Search for server",
-            on() {}
+            txt: "Connect to server",
+            on() {
+                const promptForAction = (extraMsg="") => {
+                    prompt(extraMsg + "Enter port number to connect to (enter 'default' if connecting to default port)", (response) => {
+                        let port = parseInt(response);
+
+                        if (response == "default") port = "d";
+
+                        if (isNaN(port) || port == null) promptForAction("Must enter a number or 'default'.\n");
+
+                        global.margs = [
+                            "--c:" + String(port),
+                        ]
+
+                        prompt("Enter directory location for recieving files: ", (response) => {
+                            global.margs.push(response),
+
+                            global.menuFinished = true;
+                        })
+                    })
+                }
+
+                promptForAction();
+            }
         },
         {
             txt: "Setup pre-existing directory for recieving",
             on() {
                 prompt("Enter directory location:", (response) => {
-                    console.log(response);
-                    process.exit();
+                    global.margs = [
+                        "--setup",
+                        response
+                    ]
+                    
+                    global.menuFinished = true;
                 });
             }
         },
