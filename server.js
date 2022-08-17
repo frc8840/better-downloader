@@ -23,8 +23,8 @@ async function createComparisonForTracker(directory) {
 
     for (let loc of flist) {
         const stats = fs.lstatSync(loc);
-        const name = loc.split("/")[loc.split("/").length - 1];
-        const location = loc.replace(directory, directory.endsWith("/") ? "/" : "");
+        const name = loc.includes("/") ? loc.split("/")[loc.split("/").length - 1] : loc.split("\\")[loc.split("\\").length - 1];
+        const location = loc.includes("/") ? loc.replace(directory, directory.endsWith("/") ? "/" : "") : loc.replace(directory, directory.endsWith("\\") ? "\\" : "");
         const size = stats.size;
         const lastModified = stats.mtimeMs;
         const hash = hashFile(loc);

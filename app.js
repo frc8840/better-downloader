@@ -63,6 +63,10 @@ async function main() {
 	//remove the first two args.
 	args.shift();
 	args.shift();
+	//worst solution ever. but it works.
+	for (let i = 0; i < args.length; i++) {
+		if (args.includes("%%space%%")) args[i] = args[i].replaceAll("%%space%%", " ");
+	}
 	if (args.length < 2) throw "Not enough args.";
 	
 	args.forEach((e, i) => {
@@ -204,7 +208,9 @@ async function main() {
 						const hash = hashFile(fullLocation);
 						const size = stats.size;
 						const lastModified = stats.mtimeMs;
-						const name = e.split("/")[e.split("/").length - 1];
+						//solution for windows computers.
+						const MacOS_ified_path = (e + "").replaceAll("\\", "/")
+						const name = MacOS_ified_path.split("/")[e.split("/").length - 1];
 
 						return {
 							location: e,
@@ -302,7 +308,7 @@ async function main() {
 
 							if (location.startsWith("/")) location = location.replace("/", "");
 
-							let splitPath = location.split("/");
+							let splitPath = location.includes("/") ? location.split("/") : location.split("\\");
 
 							splitPath.pop();
 

@@ -28,7 +28,7 @@ async function readDirAndGetList(currentDir, removeCurrentDir=true, isBase=true)
 }
 
 function getFileInfo(path) {
-    let splitPath = path.split("/");
+    let splitPath = path.includes("/") ? path.split("/") : path.split("\\");
     let file = splitPath[splitPath.length - 1];
     let dotSplit = lastOccuranceSplit(file, ".")
     

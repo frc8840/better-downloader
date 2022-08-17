@@ -160,9 +160,15 @@ const menus = {
                         ]
 
                         prompt("Enter directory location for recieving files: ", (response) => {
-                            global.margs.push(response),
+                            global.margs.push(response);
 
-                            global.menuFinished = true;
+                            prompt("computer ip address?", (response) => {
+                                global.margs.push("--ip");
+                                global.margs.push(response);
+                                
+                                global.menuFinished = true;
+                            });
+
                         })
                     })
                 }
